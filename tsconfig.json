@@ -36,7 +36,7 @@
     // "useUnknownInCatchVariables": true
   },
   "include": [
-    "./src/index.ts",
+    "./src/documentation/index.ts",
     "./src/types/marked.d.ts"
   ]
 }

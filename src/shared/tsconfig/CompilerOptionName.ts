@@ -1,4 +1,5 @@
 // __auto-generated__
+// copied from https://github.com/barinbritva/TypeScript-Website/blob/v2/packages/tsconfig-reference/data/_types.ts
 
 export type CompilerOptionName =
   | "help"

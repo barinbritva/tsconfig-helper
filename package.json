@@ -13,7 +13,7 @@
   "scripts": {
     "build": "ts-node ./tasks/run-build.ts",
     "build:dev": "ts-node --project ./tsconfig-dev.json ./tasks/run-build.ts -d",
-    "make": "nodemon ./dist/index.js -e js,njk --watch",
+    "make": "nodemon ./dist/documentation/index.js -e js,njk --watch",
     "start": "http-server -p 3060",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
