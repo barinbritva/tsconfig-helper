@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // Development specific
+    "removeComments": false,
+    "sourceMap": true,
+    "watch": true,
+    // Checks
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "allowUnreachableCode": true
+  }
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TSConfig tuning helper</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css"/>
+  </head>
+  <body>
+    <div class="markdown-body">
+    {% for optionKey, option in data %}
+      <div style="margin-bottom: 20px; border: 1px solid #cccccc;">
+        <div>{{ option.name }}</div>
+        <div>{{ option.brief }}</div>
+        <div>Type: {{ option.type }}</div>
+        {% if option.allowedValues %}
+        <div>Allowed: {{ option.allowedValues }}</div>
+        {% endif %}
+        <div>Default: {{ option.default }}</div>
+        {% if option.hints and option.hints.length %}
+        Hints:
+        <ul>
+        {% for hint in option.hints %}
+          <li>{{ hint }}</li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+        {% if option.relations and option.relations.length %}
+        Relations:
+        <ul>
+        {% for relation in option.relations %}
+          <li>{% if relation.type %}->{{ relation.type }}{% elseif relation.look %}<-{{ relation.look }}{% endif %} / {{ relation.to }} / {{ relation.description }}</li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+    {% endfor %}
+    </div>
+  </body>
+</html>

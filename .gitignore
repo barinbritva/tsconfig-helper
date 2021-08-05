@@ -1,0 +1,7 @@
+.idea
+.vscode
+node_modules
+/dist
+/public/*
+
+!.gitkeep
