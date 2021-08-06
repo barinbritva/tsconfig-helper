@@ -45,35 +45,4 @@ export class Printer {
 
     return option
   }
-
-  // private linkRelations(data: OptionMap): OptionMap {
-  //   const options = Object.entries(data)
-
-  //   for (const [key, option] of options) {
-  //     if (option.relations != null) {
-  //       option.relations.forEach((relation, index) => {
-  //         if (isBackRelation(relation)) {
-  //           const referencedOption = data[relation.to]
-  //           if (referencedOption != null && referencedOption.relations != null) {
-  //             const referencedRelation = referencedOption.relations.find((relationToCheck) => {
-  //               if (!isDirectRelation(relationToCheck)) {
-  //                 return false
-  //               }
-
-  //               return relationToCheck.to === option.name && relationToCheck.type === relation.look
-  //             })
-
-  //             if (referencedRelation != null && referencedRelation.description != null && option.relations != null) {
-  //               option.relations[index].description = referencedRelation.description
-  //             } 
-  //           }
-  //         }
-  //       })
-  //     }
-
-  //     data[key as ConfigOption] = option
-  //   }
-
-  //   return data
-  // }
 }
