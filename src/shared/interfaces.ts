@@ -18,6 +18,7 @@ export interface OptionDescriptor {
   name: ConfigOption
   type: string
   brief: string
+  inRoot?: boolean
   allowedValues?: string[]
   default?: DefaultDescriptor | DefaultDescriptor[]
   hints?: Hint[]

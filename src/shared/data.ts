@@ -4,6 +4,7 @@ import {OptionMap} from './types'
 export function getData(): OptionMap {
   return {
     'files': {
+      inRoot: true,
       name: 'files',
       type: 'string[]',
       brief: 'Include specific file list.',
@@ -27,6 +28,7 @@ export function getData(): OptionMap {
     },
   
     'include': {
+      inRoot: true,
       name: 'include',
       type: 'string[]',
       default: {
@@ -63,6 +65,7 @@ export function getData(): OptionMap {
     },
   
     'exclude': {
+      inRoot: true,
       name: 'exclude',
       type: 'string[]',
       default: [

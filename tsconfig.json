@@ -33,10 +33,8 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
     "exactOptionalPropertyTypes": true
-    // "useUnknownInCatchVariables": true
   },
   "include": [
-    "./src/documentation/index.ts",
-    "./src/types/marked.d.ts"
+    "./src/**/*"
   ]
 }
