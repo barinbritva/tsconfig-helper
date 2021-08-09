@@ -12,97 +12,41 @@
         <input type="text" name="search" placeholder="Search flag by name" />
       </div>
       <div class="content">
+        {% for optionKey, option in data %}
         <div class="flag-block">
-          <div class="flag-name">files</div>
-          <div class="flag-description">Specify what bundled library declaration files will be included.</div>
-          <div class="flag-type"><strong>Type:</strong> string[]</div>
-          <div class="flag-default"><strong>Default:</strong> ["node_modules", "bower_components", "jspm_packages"], if outDir is defined then adds value of outDir, if declarationDir is defined then adds value of declarationDir</div>
-          <div class="flag-hints">
-            <p><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M13 16.9C15.2822 16.4367 17 14.419 17 12C17 9.23858 14.7614 7 12 7C9.23858 7 7 9.23858 7 12C7 14.419 8.71776 16.4367 11 16.9V18V19V20C11 20.5523 11.4477 21 12 21C12.5523 21 13 20.5523 13 20V19V18V16.9ZM18 12C18 14.6124 16.3304 16.8349 14 17.6586V20C14 21.1046 13.1046 22 12 22C10.8954 22 10 21.1046 10 20V17.6586C7.66962 16.8349 6 14.6124 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12Z" fill="black"/>
-<line x1="18.6464" y1="5.64645" x2="20.6464" y2="3.64645" stroke="black"/>
-<line x1="20" y1="11.5" x2="23" y2="11.5" stroke="black"/>
-<line x1="18.2236" y1="17.5528" x2="20.2236" y2="18.5528" stroke="black"/>
-<line x1="6.35355" y1="17.3536" x2="4.93934" y2="18.7678" stroke="black"/>
-<path d="M4 11.5H1" stroke="black"/>
-<line x1="5.64645" y1="5.35355" x2="3.64645" y2="3.35355" stroke="black"/>
-<line x1="12.5" y1="4" x2="12.5" y2="1" stroke="black"/>
-</svg> Hints:</p>
-            <ul>
-              <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM10.9893 8.16152L6.16085 3.33307V8.16152V12.99L10.9893 8.16152Z" fill="#4DA6FF"/>
-</svg> It's just shortcut for files. Technically, this options are used to fill files options.</li>
-              <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM10.9893 8.16152L6.16085 3.33307V8.16152V12.99L10.9893 8.16152Z" fill="#4DA6FF"/>
-</svg> Include all files even though they aren't used in the program.</li>
-              <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM10.9893 8.16152L6.16085 3.33307V8.16152V12.99L10.9893 8.16152Z" fill="#4DA6FF"/>
-</svg> If a glob pattern doesn't include a file extension, then it will be defaults: .ts, .tsx, and .d.ts.</li>
-              <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM10.9893 8.16152L6.16085 3.33307V8.16152V12.99L10.9893 8.16152Z" fill="#4DA6FF"/>
-</svg> If allowJs are enabled, it adds .js and .jsx to defaults of glob pattern.</li>
-              <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM10.9893 8.16152L6.16085 3.33307V8.16152V12.99L10.9893 8.16152Z" fill="#4DA6FF"/>
-</svg> Right option to work with different bundlers.</li>
-            </ul>
-          </div>
-          <div class="flag-relations">
-            <p><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M12 6V9L16 5L12 1V4C7.58 4 4 7.58 4 12C4 13.57 4.46 15.03 5.24 16.26L6.7 14.8C6.25 13.97 6 13.01 6 12C6 8.69 8.69 6 12 6ZM18.76 7.74L17.3 9.2C17.74 10.04 18 10.99 18 12C18 15.31 15.31 18 12 18V15L8 19L12 23V20C16.42 20 20 16.42 20 12C20 10.43 19.54 8.97 18.76 7.74V7.74Z" fill="black"/>
-</svg> Relations:</p>
-            <ul>
-              <li><svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M6.37516 14.1666C9.50478 14.1666 12.0418 11.6296 12.0418 8.49998C12.0418 5.37037 9.50478 2.83331 6.37516 2.83331C3.24555 2.83331 0.708496 5.37037 0.708496 8.49998C0.708496 11.6296 3.24555 14.1666 6.37516 14.1666Z" fill="#4DA6FF"/>
-<path d="M12.042 3.01746V4.49787C13.6924 5.07871 14.8753 6.65121 14.8753 8.49996C14.8753 10.3487 13.6924 11.9212 12.042 12.502V13.9825C14.4857 13.352 16.292 11.142 16.292 8.49996C16.292 5.85787 14.4857 3.64787 12.042 3.01746V3.01746Z" fill="#4DA6FF"/>
-</svg> modifies <span class="flag-name">file</span></li>
-              <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M9.99984 2.66669C7.05317 2.66669 4.6665 5.05335 4.6665 8.00002C4.6665 10.9467 7.05317 13.3334 9.99984 13.3334C12.9465 13.3334 15.3332 10.9467 15.3332 8.00002C15.3332 5.05335 12.9465 2.66669 9.99984 2.66669ZM9.99984 12C7.79317 12 5.99984 10.2067 5.99984 8.00002C5.99984 5.79335 7.79317 4.00002 9.99984 4.00002C12.2065 4.00002 13.9998 5.79335 13.9998 8.00002C13.9998 10.2067 12.2065 12 9.99984 12Z" fill="#4DA6FF"/>
-<path d="M1.99984 8.00003C1.99984 6.26003 3.11317 4.78003 4.6665 4.23336V2.84003C2.3665 3.43336 0.666504 5.51336 0.666504 8.00003C0.666504 10.4867 2.3665 12.5667 4.6665 13.16V11.7667C3.11317 11.22 1.99984 9.74003 1.99984 8.00003V8.00003Z" fill="#4DA6FF"/>
-</svg> modified by <span class="flag-name">exclude</span></li>
-              <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M8.00016 1.33331C4.32016 1.33331 1.3335 4.31998 1.3335 7.99998C1.3335 11.68 4.32016 14.6666 8.00016 14.6666C11.6802 14.6666 14.6668 11.68 14.6668 7.99998C14.6668 4.31998 11.6802 1.33331 8.00016 1.33331ZM11.3335 8.66665H4.66683V7.33331H11.3335V8.66665Z" fill="#4DA6FF"/>
-</svg> enabled by <span class="flag-name">include</span></li>
-              <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M4.66667 4.66665H11.3333V6.66665L14 3.99998L11.3333 1.33331V3.33331H3.33333V7.33331H4.66667V4.66665ZM11.3333 11.3333H4.66667V9.33331L2 12L4.66667 14.6666V12.6666H12.6667V8.66665H11.3333V11.3333Z" fill="#4DA6FF"/>
-</svg> related <span class="flag-name">file</span></li>
-              <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M4.66683 7.33331V8.66665H11.3335V7.33331H4.66683ZM8.00016 1.33331C4.32016 1.33331 1.3335 4.31998 1.3335 7.99998C1.3335 11.68 4.32016 14.6666 8.00016 14.6666C11.6802 14.6666 14.6668 11.68 14.6668 7.99998C14.6668 4.31998 11.6802 1.33331 8.00016 1.33331ZM8.00016 13.3333C5.06016 13.3333 2.66683 10.94 2.66683 7.99998C2.66683 5.05998 5.06016 2.66665 8.00016 2.66665C10.9402 2.66665 13.3335 5.05998 13.3335 7.99998C13.3335 10.94 10.9402 13.3333 8.00016 13.3333Z" fill="#4DA6FF"/>
-</svg> enables <span class="flag-name">include</span></li>
-            </ul>
-          </div>
+            <div class="flag-name">{{ option.name }}</div>
+            <div class="flag-description">{{ option.brief }}</div>
+            <div class="flag-type"><strong>Type:</strong> {{ option.type }}</div>
+            {% if option.allowedValues %}
+            <div class="flag-default"><strong>Allowed:</strong> {{ option.allowedValues }}</div>
+            {% endif %}
+            <div class="flag-default"><strong>Default:</strong> {{ option.defaultValue }}</div>
+            {% if option.hints and option.hints.length %}
+            <div class="flag-hints">
+              <p><img src="/images/icons/bulb.svg" alt="bulb icon"/> Hints:</p>
+              <ul>
+                {% for hint in option.hints %}
+                <li><img src="/images/icons/bullet.svg" alt=""/> {{ hint }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+            {% if option.relations and option.relations.length %}
+            <div class="flag-relations">
+              <p><img src="/images/icons/relation.svg" alt=""/> Relations:</p>
+              <ul>
+                {% for relation in option.relations %}
+                <li>
+                  <img alt="" src="/images/icons/relation-{{ relation.icon }}.svg" />
+                  {{ relation.caption }} <span class="flag-name">{{ relation.to }}</span>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
         </div>
-        <div class="examples-block"></div>
-      </div>
-      
-    </div>
-    <div class="markdown-body">
-    {% for optionKey, option in data %}
-      <div style="margin-bottom: 20px; border: 1px solid #cccccc;">
-        <div>{{ option.name }}</div>
-        <div>{{ option.brief }}</div>
-        <div>Type: {{ option.type }}</div>
-        {% if option.allowedValues %}
-        <div>Allowed: {{ option.allowedValues }}</div>
-        {% endif %}
-        <div>Default: {{ option.defaultValue }}</div>
-        {% if option.hints and option.hints.length %}
-        Hints:
-        <ul>
-        {% for hint in option.hints %}
-          <li>{{ hint }}</li>
         {% endfor %}
-        </ul>
-        {% endif %}
-        {% if option.relations and option.relations.length %}
-        Relations:
-        <ul>
-        {% for relation in option.relations %}
-          <li>{% if relation.type %}->{{ relation.type }}{% elseif relation.look %}<-{{ relation.look }}{% endif %} / {{ relation.to }} / {{ relation.description }}</li>
-        {% endfor %}
-        </ul>
-        {% endif %}
       </div>
-    {% endfor %}
     </div>
   </body>
 </html>

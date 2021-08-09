@@ -1,7 +1,9 @@
 import {OptionDescriptor} from '../shared/interfaces'
 import {DefaultDescriptor} from '../shared/types'
-import {isDefinedCondition, isMultipleCondition} from '../shared/utils'
+import {isBackRelation, isDefinedCondition, isDirectRelation, isMultipleCondition} from '../shared/utils'
 import {MarkdownHelper as Markdown} from './markdown-helper'
+import {PrintableRelation} from './interfaces'
+import { RelationType } from '../shared/enums'
 
 export class PrintableOption {
   private static undefinedSymbol = 'none'
@@ -62,13 +64,26 @@ export class PrintableOption {
     }
 
     return this.option.hints.map((hint) => {
-      const value = Array.isArray(hint) ? hint[0] + hint[1] : hint
+      // todo think about highligh +|/-
+      const value = Array.isArray(hint) ? hint[1] : hint
       return Markdown.compile(value)
     })
   }
 
-  get relations() {
-    return this.option.relations
+  get relations(): PrintableRelation[] {
+    if (this.option.relations === undefined) {
+      return []
+    }
+
+    return this.option.relations.map((relation) => {
+      const relationType = isDirectRelation(relation) ? relation.type : relation.look
+      
+      return {
+        to: relation.to,
+        description: relation.description ?? '',
+        ...this.getRelationIcon(relationType, isBackRelation(relation))
+      }
+    })
   }
 
   get isDeprecated(): boolean {
@@ -103,5 +118,40 @@ export class PrintableOption {
     }
   
     return value.replace('add:', 'adds value of ').replace(/%/g, '`')
+  }
+
+  private getRelationIcon(relationType: RelationType, isBackRelation: boolean): { caption: string, icon: string } {    
+    switch(relationType) {
+      case RelationType.Enables:
+        return {
+          icon: isBackRelation ? 'enabled-by' : 'enables',
+          caption: isBackRelation ? 'enabled by' : 'enables'
+        }
+      case RelationType.Modifies:
+        return {
+          icon: isBackRelation ? 'modified-by' : 'modifies',
+          caption: isBackRelation ? 'modified by' : 'modifies'
+        }
+      case RelationType.Related:
+        return {
+          icon: 'related',
+          caption: 'related'
+        }
+      case RelationType.Changes:
+        return {
+          icon: 'related',
+          caption: isBackRelation ? 'changed by' : 'changes'
+        }
+      case RelationType.Needs:
+        return {
+          icon: 'related',
+          caption: isBackRelation ? 'needed by' : 'needs'
+        }
+      case RelationType.Replaces:
+        return {
+          icon: 'related',
+          caption: isBackRelation ? 'replaced by' : 'replaces'
+        }
+    }
   }
 }
