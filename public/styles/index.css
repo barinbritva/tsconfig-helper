@@ -66,8 +66,8 @@ body {
 .flag-relations p {
     font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
     font-weight: bold;
-    display: flex;
-    align-items: center;
+    /* display: flex;
+    align-items: center; */
 }
 .flag-hints p svg,
 .flag-relations p svg {
@@ -80,8 +80,8 @@ body {
     padding: 0;
 }
 .flag-hints ul li {
-    display: flex;
-    align-items: center;
+    /* display: flex;
+    align-items: center; */
     cursor: pointer;
 }
 .flag-hints ul li + li {

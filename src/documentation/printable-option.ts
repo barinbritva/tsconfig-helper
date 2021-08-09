@@ -1,5 +1,7 @@
+import fs from 'fs'
+import path from 'path'
 import {OptionDescriptor} from '../shared/interfaces'
-import {DefaultDescriptor} from '../shared/types'
+import {DefaultDescriptor, Hint} from '../shared/types'
 import {isBackRelation, isDefinedCondition, isDirectRelation, isMultipleCondition} from '../shared/utils'
 import {MarkdownHelper as Markdown} from './markdown-helper'
 import {PrintableRelation} from './interfaces'
@@ -7,6 +9,7 @@ import { RelationType } from '../shared/enums'
 
 export class PrintableOption {
   private static undefinedSymbol = 'none'
+  private static examplesPath = '../../src/shared'
   constructor(private option: OptionDescriptor) {}
 
   get originalName(): string {
@@ -58,15 +61,18 @@ export class PrintableOption {
     return Markdown.compile(value)
   }
 
-  get hints(): string[] {
+  get hints(): Hint[] {
     if (this.option.hints === undefined) {
       return []
     }
 
     return this.option.hints.map((hint) => {
-      // todo think about highligh +|/-
-      const value = Array.isArray(hint) ? hint[1] : hint
-      return Markdown.compile(value)
+      return {
+        brief: Markdown.compile(hint.brief),
+        text: hint.text === undefined
+          ? ''
+          : Markdown.compile(this.readHintText(hint.text))
+      }
     })
   }
 
@@ -153,5 +159,11 @@ export class PrintableOption {
           caption: isBackRelation ? 'replaced by' : 'replaces'
         }
     }
+  }
+
+  private readHintText(filePath: string): string {
+    const fullPath = path.resolve(__dirname, PrintableOption.examplesPath, filePath)
+    const content = fs.readFileSync(fullPath, {encoding: 'utf8'})
+    return content
   }
 }
