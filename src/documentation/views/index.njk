@@ -7,34 +7,55 @@
     <link rel="stylesheet" href="/styles/index.css"/>
   </head>
   <body>
-    <div class="markdown-body">
-    {% for optionKey, option in data %}
-      <div style="margin-bottom: 20px; border: 1px solid #cccccc;">
-        <div>{{ option.name }}</div>
-        <div>{{ option.brief }}</div>
-        <div>Type: {{ option.type }}</div>
-        {% if option.allowedValues %}
-        <div>Allowed: {{ option.allowedValues }}</div>
-        {% endif %}
-        <div>Default: {{ option.defaultValue }}</div>
-        {% if option.hints and option.hints.length %}
-        Hints:
-        <ul>
-        {% for hint in option.hints %}
-          <li>{{ hint }}</li>
-        {% endfor %}
-        </ul>
-        {% endif %}
-        {% if option.relations and option.relations.length %}
-        Relations:
-        <ul>
-        {% for relation in option.relations %}
-          <li>{% if relation.type %}->{{ relation.type }}{% elseif relation.look %}<-{{ relation.look }}{% endif %} / {{ relation.to }} / {{ relation.description }}</li>
-        {% endfor %}
-        </ul>
-        {% endif %}
+    <div class="container">
+      <div class="search-block">
+        <input type="text" name="search" placeholder="Search flag by name" />
       </div>
-    {% endfor %}
+      <div class="content">
+        {% for optionKey, option in data %}
+        <div class="flag-block">
+            <div class="flag-name">{{ option.name }}</div>
+            <div class="flag-description">{{ option.brief }}</div>
+            <div class="flag-type"><strong>Type:</strong> {{ option.type }}</div>
+            {% if option.allowedValues %}
+            <div class="flag-default"><strong>Allowed:</strong> {{ option.allowedValues }}</div>
+            {% endif %}
+            <div class="flag-default"><strong>Default:</strong> {{ option.defaultValue }}</div>
+            {% if option.hints and option.hints.length %}
+            <div class="flag-hints">
+              <p><img src="/images/icons/bulb.svg" alt="bulb icon"/> Hints:</p>
+              <ul>
+                {% for hint in option.hints %}
+                <li>
+                  <img src="/images/icons/bullet.svg" alt=""/> {{ hint.brief }}
+                  {% if hint.text %}
+                  <div>{{ hint.text }}</div>
+                  {% endif %}
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+            {% if option.relations and option.relations.length %}
+            <div class="flag-relations">
+              <p><img src="/images/icons/relation.svg" alt=""/> Relations:</p>
+              <ul>
+                {% for relation in option.relations %}
+                <li>
+                  <img alt="" src="/images/icons/relation-{{ relation.icon }}.svg" />
+                  {{ relation.caption }} <span class="flag-name">{{ relation.to }}</span>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+      </div>
     </div>
   </body>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/default.min.css">
+  {# <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/languages/typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/languages/json.min.js"></script> #}
 </html>

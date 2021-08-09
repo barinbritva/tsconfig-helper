@@ -1,7 +1,10 @@
 import {ConfigOption} from './tsconfig'
 import {OptionDescriptor} from './interfaces'
 
-export type Hint = ['+' | '-', string] | string
+export interface Hint {
+  brief: string
+  text?: string
+}
 
 export type DefaultDefinedCondition = {
   option: ConfigOption,

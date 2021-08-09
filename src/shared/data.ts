@@ -7,12 +7,22 @@ export function getData(): OptionMap {
       inRoot: true,
       name: 'files',
       type: 'string[]',
-      brief: 'Include specific file list.',
+      brief: 'Include specific file list. Convenient to use if there is one ore a couple of application entry points.',
       hints: [
-        'An error occurs if any of the files can\'t be found.',
-        'All files are imported inside of specified files will be compiled too.',
-        ['+', 'All files are not included to compilation will be fully ignored by compiler.'],
-        ['-', 'Not an option if you are using additional tools for build process like bundlers. Use `include` instead.'] // check
+        {
+          brief: 'All files are not included to compilation will be fully ignored by compiler.',
+          text: './examples/files-skip-others.md'
+        },
+        {
+          brief: 'All files are imported inside of specified files will be compiled too.',
+          text: './examples/files-import.md'
+        },
+        {
+          brief: 'Not an option if you are using additional tools for build process like bundlers. Use `include` instead.' // check
+        },
+        {
+          brief: 'An error occurs if any of the files can\'t be found.'
+        }
       ],
       relations: [
         {
@@ -40,11 +50,21 @@ export function getData(): OptionMap {
       },
       brief: 'Bunch file include using glob patterns.',
       hints: [
-        'It\'s just shortcut for `files`. Technically, this options are used to fill `files` options.',
-        'Include all files even though they aren\'t used in the program.',
-        'If a glob pattern doesn\'t include a file extension, then it will be defaults: `.ts`, `.tsx`, and `.d.ts`.',
-        'If `allowJs` are enabled, it adds `.js` and `.jsx` to defaults of glob pattern.',
-        ['+', 'Right option to work with different bundlers.'] // check
+        {
+          brief: 'It\'s just shortcut for `files`. Technically, this options are used to fill `files` options.'
+        },
+        {
+          brief: 'Include all files even though they aren\'t used in the program.'
+        },
+        {
+          brief: 'If a glob pattern doesn\'t include a file extension, then it will be defaults: `.ts`, `.tsx`, and `.d.ts`.'
+        },
+        {
+          brief: 'If `allowJs` are enabled, it adds `.js` and `.jsx` to defaults of glob pattern.'
+        },
+        {
+          brief: 'Right option to work with different bundlers.' // check
+        }
       ],
       relations: [
         {
@@ -94,10 +114,18 @@ export function getData(): OptionMap {
         }
       ],
       hints: [
-        ['-', 'Can only exclude file paths defined in `include`.'],
-        ['-', 'Can not have impact to `files` directive.'],
-        ['-', 'Can not exclude file if it\'s imported in other file which is included.'],
-        ['-', 'Once you declared `exclude` explicitly all the default values should be added manually if it\'s necessary.']
+        {
+          brief: 'Can only exclude file paths defined in `include`.'
+        },
+        {
+          brief: 'Can not have impact to `files` directive.'
+        },
+        {
+          brief: 'Can not exclude file if it\'s imported in other file which is included.'
+        },
+        {
+          brief: 'Once you declared `exclude` explicitly all the default values should be added manually if it\'s necessary.'
+        }
       ]
     },
   
@@ -157,8 +185,12 @@ export function getData(): OptionMap {
       type: 'enum',
       allowedValues: ['Classic', 'Node'],
       hints: [
-        'In most cases you won\'t need to use `Classic` in modern code.',
-        'It makes sense to always set it up to `Node` manually.'
+        {
+          brief: 'In most cases you won\'t need to use `Classic` in modern code.'
+        },
+        {
+          brief: 'It makes sense to always set it up to `Node` manually.'
+        }
       ],
       default: {
         option: 'module',
@@ -186,9 +218,15 @@ export function getData(): OptionMap {
       type: 'enum[]',
       allowedValues: ['ES5', 'ES6'], // todo
       hints: [
-        ['+', 'It\'s able to include whole EcmaScript standards or its some parts.'],
-        ['-', 'It adds only type definitions, not polyfills. If you add some `lib` from higher standard to lower you have to manually add polyfills for it.'],
-        ['-', 'Once you declared `lib` explicitly all the default values should be added manually if it\'s necessary.']
+        {
+          brief: 'It\'s able to include whole EcmaScript standards or its some parts.'
+        },
+        {
+          brief: 'It adds only type definitions, not polyfills. If you add some `lib` from higher standard to lower you have to manually add polyfills for it.'
+        },
+        {
+          brief: 'Once you declared `lib` explicitly all the default values should be added manually if it\'s necessary.'
+        }
       ],
       relations: [
         {
