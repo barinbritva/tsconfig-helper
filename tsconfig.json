@@ -34,7 +34,7 @@
     "strictPropertyInitialization": true,
     "exactOptionalPropertyTypes": true
   },
-  "include": [
-    "./src/**/*"
+  "files": [
+    "./src/cli/index.ts"
   ]
 }

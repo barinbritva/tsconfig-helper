@@ -1,5 +1,5 @@
-import fs from 'fs'
 import {getData} from '../shared/data'
+import { OptionDescriptor } from '../shared/interfaces'
 import {OptionMap} from '../shared/types'
 import { isDefinedCondition, isMultipleCondition } from '../shared/utils'
 import {TsConfig} from './interfaces'
@@ -8,14 +8,9 @@ export class ConfigHelper {
   private config: TsConfig
   private configDescriptor: OptionMap
 
-  constructor() {
-    // todo remove comments
-    // todo process extends
-
-    const configPath = process.argv[2]
-    this.assertConfigPathIsValid(configPath)
-    this.config = this.readConfig(configPath)
+  constructor(configOrPath: TsConfig) {
     this.configDescriptor = getData()
+    this.config = configOrPath
   }
 
   public show(): TsConfig {
@@ -31,52 +26,43 @@ export class ConfigHelper {
       if (descriptor.default === undefined || this.isOptionDefined(descriptor.name)) {
         return
       }
+      
+      const defaultDescriptors: OptionDescriptor[] = Array.isArray(descriptor.default)
+      ? descriptor.default
+      : [descriptor.default]
 
-      const defaults = Array.isArray(descriptor.default) ? descriptor.default : [descriptor.default]
-      // todo do for all values
-      const defaultValue = defaults[0]
 
-      // todo make type casting before define option
-      if (typeof defaultValue === 'string') {
-        this.defineOption(descriptor.name, defaultValue, descriptor.inRoot)
-      } else if (isDefinedCondition(defaultValue)) {
-        if (this.isOptionDefined(defaultValue.option)) {
-          this.defineOption(descriptor.name, defaultValue.conditions.defined)
-        } else if (defaultValue.conditions.notDefined !== undefined) {
-          this.defineOption(descriptor.name, defaultValue.conditions.notDefined)
-        }
-      } else if (isMultipleCondition(defaultValue)) {
-        const relatedOptionValue = this.config[defaultValue.option as keyof TsConfig]
-        const suitablePair = defaultValue.conditions.values.find((value) => {
-          return value[0] === relatedOptionValue
-        })
+      const defaultValues = defaultDescriptors.map((defaultValue) => {
+        // todo make type casting before define option
+        if (isDefinedCondition(defaultValue)) {
+          if (this.isOptionDefined(defaultValue.option)) {
+            return defaultValue.conditions.defined
+          } else if (defaultValue.conditions.notDefined !== undefined) {
+            return defaultValue.conditions.notDefined
+          }
+        } else if (isMultipleCondition(defaultValue)) {
+          const relatedOptionValue = this.config[defaultValue.option as keyof TsConfig]
+          const suitablePair = defaultValue.conditions.values.find((value) => {
+            return value[0] === relatedOptionValue
+          })
 
-        if (suitablePair === undefined) {
-          if (defaultValue.conditions.otherwise !== undefined) {
-            this.defineOption(descriptor.name, defaultValue.conditions.otherwise)
+          if (suitablePair === undefined) {
+            if (defaultValue.conditions.otherwise !== undefined) {
+              return defaultValue.conditions.otherwise
+            }
+          } else {
+            return suitablePair[1]
           }
         } else {
-          this.defineOption(descriptor.name, suitablePair[1])
+          return defaultValue
         }
-      }
+      })
+
+      const mergedValue = this.mergeDefaultValuePieces(defaultValues)
+      this.defineOption(descriptor.name, mergedValue, descriptor.inRoot)
     })
 
     return this.config
-  }
-
-  private assertConfigPathIsValid(path: string): void {
-    if (path == null) {
-      throw new Error('Config path not passed.')
-    }
-
-    if (!fs.existsSync(path)) {
-      throw new Error('Config file not found in ' + path)
-    }
-  }
-
-  private readConfig(path: string): TsConfig {
-    const content = fs.readFileSync(path, {encoding: 'utf8'})
-    return JSON.parse(content)
   }
 
   private isOptionDefined(key: string, searchInRoot = false): boolean {
@@ -88,13 +74,35 @@ export class ConfigHelper {
     }
   }
 
-  // todo write generic
   private defineOption(key: string, value: any, defineInRoot = false): void {
     if (defineInRoot) {
       this.config[key as keyof TsConfig] = value
     } else {
       this.config.compilerOptions[key as keyof TsConfig] = value
     }
+  }
+
+  private mergeDefaultValuePieces(pieces: unknown[]): unknown {
+    // todo ! check for dynamic value %flag%
+    if (pieces.length === 1) {
+      return pieces[0]
+    }
+
+    const mergedValues: unknown[] = []
+    pieces.forEach((piece) => {
+      if (piece === undefined) {
+        return
+      }
+
+      if (Array.isArray(piece)) {
+        mergedValues.push(...piece)
+      } else {
+        // if other cases appear, improve the logic
+        throw new Error('Value merging are available only for arrays. Given: ' + pieces.join(', '))
+      }
+    })
+
+    return mergedValues
   }
 }
 

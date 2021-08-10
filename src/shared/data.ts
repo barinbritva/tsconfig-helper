@@ -1,4 +1,4 @@
-import { RelationType } from './enums'
+import {RelationType} from './enums'
 import {OptionMap} from './types'
 
 export function getData(): OptionMap {
@@ -44,8 +44,8 @@ export function getData(): OptionMap {
       default: {
         option: 'files',
         conditions: {
-          defined: '[]',
-          notDefined: '["**/*"]'
+          defined: [],
+          notDefined: ["**/*"]
         }
       },
       brief: 'Bunch file include using glob patterns.',
@@ -89,19 +89,18 @@ export function getData(): OptionMap {
       name: 'exclude',
       type: 'string[]',
       default: [
-        '["node_modules", "bower_components", "jspm_packages"]', // check
+        // todo check
+        ["node_modules", "bower_components", "jspm_packages"],
         {
           option: 'outDir',
           conditions: {
-            defined: 'add:%outDir%',
-            // notDefined: 'null'
+            defined: ["%outDir%"],
           }
         },
         {
           option: 'declarationDir',
           conditions: {
-            defined: 'add:%declarationDir%',
-            // notDefined: 'null'
+            defined: ["%declarationDir%"],
           }
         }
       ],
@@ -132,19 +131,21 @@ export function getData(): OptionMap {
     'target': {
       name: 'target',
       brief: 'Set the ECMAScript version for emitted JavaScript.',
-      type: 'enum',
+      type: 'string',
       allowedValues: ['ES3', 'ES5', 'ES6', 'ES2015', 'ES7', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', 'ESNext'],
       default: 'ES3',
       relations: [
         {
           type: RelationType.Changes,
           to: 'module',
-          description: 'By default `module` is set depending on value of `target`' // specify
+          // todo specify
+          description: 'By default `module` is set depending on value of `target`'
         },
         {
           type: RelationType.Changes,
           to: 'lib',
-          description: 'By default `lib` is set depending on value of `target`' // specify
+          // todo specify
+          description: 'By default `lib` is set depending on value of `target`'
         },
       ],
     },
@@ -152,7 +153,7 @@ export function getData(): OptionMap {
     'module': {
       name: 'module',
       brief: 'Sets the module system for the program.',
-      type: 'enum',
+      type: 'string',
       allowedValues: ['CommonJS', 'ES6', 'ES2015', 'ES2020', 'None', 'UMD', 'AMD', 'System', 'ESNext'],
       default: {
         option: 'target',
@@ -163,14 +164,16 @@ export function getData(): OptionMap {
             ['ES6', 'ES6'],
             ['ES2015', 'ES2015'],
           ],
-          otherwise: 'ESNext' // check
+          // check
+          otherwise: 'ESNext'
         }
       },
       relations: [
         {
           type: RelationType.Changes,
           to: 'moduleResolution',
-          description: 'By default `module` changes `moduleResolution`.' // specify
+          // specify
+          description: 'By default `module` changes `moduleResolution`.'
         },
         {
           look: RelationType.Changes,
@@ -182,7 +185,7 @@ export function getData(): OptionMap {
     'moduleResolution': {
       name: 'moduleResolution',
       brief: 'Specify how TypeScript looks up a file from a given module specifier.',
-      type: 'enum',
+      type: 'string',
       allowedValues: ['Classic', 'Node'],
       hints: [
         {
@@ -199,7 +202,7 @@ export function getData(): OptionMap {
             ['AMD', 'Classic'],
             ['UMD', 'Classic'],
             ['System', 'Classic']
-            // check ES6
+            // todo check ES6
           ],
           otherwise: 'Node'
         }
@@ -215,8 +218,10 @@ export function getData(): OptionMap {
     'lib': {
       name: 'lib',
       brief: 'Specify what bundled library declaration files will be included.',
-      type: 'enum[]',
-      allowedValues: ['ES5', 'ES6'], // todo
+      type: 'string[]',
+      // todo default
+      // todo
+      allowedValues: ['ES5', 'ES6'],
       hints: [
         {
           brief: 'It\'s able to include whole EcmaScript standards or its some parts.'

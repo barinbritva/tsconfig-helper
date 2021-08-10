@@ -9,19 +9,19 @@ export interface Hint {
 export type DefaultDefinedCondition = {
   option: ConfigOption,
   conditions: {
-    defined: string
-    notDefined?: string
+    defined: unknown
+    notDefined?: unknown
   }
 }
 
 export type DefaultMultipleCondition = {
   option: ConfigOption,
   conditions: {
-    values: [string, string][]
-    otherwise?: string
+    values: [unknown, unknown][]
+    otherwise?: unknown
   }
 }
 
-export type DefaultDescriptor = DefaultDefinedCondition | DefaultMultipleCondition | string
+export type DefaultDescriptor = DefaultDefinedCondition | DefaultMultipleCondition | unknown
 
 export type OptionMap = Partial<Record<ConfigOption, OptionDescriptor>>

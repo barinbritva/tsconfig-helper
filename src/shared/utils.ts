@@ -2,11 +2,14 @@ import {BackRelation, Relation} from './interfaces'
 import {DefaultDefinedCondition, DefaultDescriptor, DefaultMultipleCondition} from './types'
 
 export function isMultipleCondition(value: DefaultDescriptor): value is DefaultMultipleCondition {
-  if (typeof value === 'string') {
+  if (typeof value !== 'object' || value == null) {
     return false
   }
 
-  if ('values' in value.conditions) {
+  if (
+    'conditions' in (value as DefaultMultipleCondition) &&
+    'values' in (value as DefaultMultipleCondition).conditions
+  ) {
     return true
   }
 
@@ -14,11 +17,14 @@ export function isMultipleCondition(value: DefaultDescriptor): value is DefaultM
 }
 
 export function isDefinedCondition(value: DefaultDescriptor): value is DefaultDefinedCondition {
-  if (typeof value === 'string') {
+  if (typeof value !== 'object' || value == null) {
     return false
   }
 
-  if ('defined' in value.conditions) {
+  if (
+    'conditions' in (value as DefaultDefinedCondition) &&
+    'defined' in (value as DefaultDefinedCondition).conditions
+  ) {
     return true
   }
 
