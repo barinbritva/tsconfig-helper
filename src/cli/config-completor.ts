@@ -3,28 +3,24 @@ import { OptionDescriptor } from '../shared/interfaces'
 import {OptionMap} from '../shared/types'
 import { isDefinedCondition, isMultipleCondition } from '../shared/utils'
 import {TsConfig} from './interfaces'
-import {ConfigAnnotator} from './config-annotator'
 
-export class ConfigHelper {
+export class ConfigCompletor {
+  private resultConfig: TsConfig
   private configDescriptor: OptionMap
 
-  constructor(private annotator: ConfigAnnotator, private config: TsConfig) {
+  constructor(private originalConfig: TsConfig) {
+    // instead of deep clone
+    this.resultConfig = JSON.parse(JSON.stringify(this.originalConfig))
     this.configDescriptor = getData()
     this.completeConfig()
   }
 
-  public getAsObject(): TsConfig {
-    return this.config
+  public getResultConfig(): TsConfig {
+    return this.resultConfig
   }
 
-  public getAsString(addAnnotations?: boolean): string {
-    const stringConfig = JSON.stringify(this.config, undefined, 2)
-
-    if (addAnnotations) {
-      return this.annotator.addCommentsToConfig(stringConfig)
-    } else {
-      return stringConfig
-    }
+  public getOriginalConfig(): TsConfig {
+    return this.originalConfig
   }
 
   private completeConfig(): TsConfig {
@@ -77,10 +73,9 @@ export class ConfigHelper {
 
       const mergedValue = this.mergeDefaultValuePieces(defaultValues)
       this.defineOption(descriptor.name, mergedValue, descriptor.inRoot)
-      this.annotator.addDefaultAnnotation(descriptor)
     })
 
-    return this.config
+    return this.resultConfig
   }
 
   private isOptionDefined(key: string, searchInRoot = false): boolean {
@@ -90,17 +85,17 @@ export class ConfigHelper {
 
   private getDefinedValue(key: string, searchInRoot = false): unknown {
     if (searchInRoot) {
-      return this.config[key as keyof TsConfig]
+      return this.resultConfig[key as keyof TsConfig]
     } else {
-      return this.config.compilerOptions[key as keyof TsConfig]
+      return this.resultConfig.compilerOptions[key as keyof TsConfig]
     }
   }
 
   private defineOption(key: string, value: any, defineInRoot = false): void {
     if (defineInRoot) {
-      this.config[key as keyof TsConfig] = value
+      this.resultConfig[key as keyof TsConfig] = value
     } else {
-      this.config.compilerOptions[key as keyof TsConfig] = value
+      this.resultConfig.compilerOptions[key as keyof TsConfig] = value
     }
   }
 

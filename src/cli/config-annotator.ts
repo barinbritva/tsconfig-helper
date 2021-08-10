@@ -1,12 +1,59 @@
-import {OptionAnnotation} from './interfaces'
-import {DefaultDescriptor} from '../shared/types'
+import {DefaultDescriptor, OptionMap} from '../shared/types'
 import {OptionDescriptor} from '../shared/interfaces'
 import {isDefinedCondition, isMultipleCondition} from '../shared/utils'
+import {getData} from '../shared/data'
+import {OptionAnnotation, TsConfig} from './interfaces'
+import {ConfigOption} from '../shared/tsconfig'
+import {ConfigReader} from './config-reader'
 
 export class ConfigAnnotator {
+  private configDescriptor: OptionMap
   private annotations: Record<string, OptionAnnotation> = {}
+
+  constructor(private originalConfig: TsConfig, private resultConfig: TsConfig) {
+    this.configDescriptor = getData()
+    this.generateAnnotations()
+  }
+
+  public getAnnotatedConfig(): string {
+    let config = ConfigReader.toString(this.resultConfig)
+    const annotations = Object.entries(this.annotations)
+
+    annotations.forEach((annotation) => {
+      const [optionToAnnotate] = annotation
+      const searchOptionLine = new RegExp(`$[\\s]*"${optionToAnnotate}":`, 'm')
+      const match = config.match(searchOptionLine)
+
+      if (match == null) {
+        return
+      }
+
+      const commentIndent = match[0].substr(0, match[0].indexOf(`"${optionToAnnotate}"`))
+      config = config.replace(match[0], commentIndent + '// ' + annotation[1].default + match[0])
+    })
+
+    return config
+  }
+
+  private generateAnnotations(): void {
+    let resultConfigKeys = Object.keys(this.resultConfig)
+    if (this.resultConfig.compilerOptions != null) {
+      resultConfigKeys = resultConfigKeys.concat(Object.keys(this.resultConfig.compilerOptions))
+    }
+
+    resultConfigKeys.forEach((key) => {
+      const option = this.configDescriptor[key as ConfigOption]
+
+      if (
+        option != null &&
+        !this.isOptionDefined(this.originalConfig, option)
+      ) {
+        this.addDefaultAnnotation(option)
+      }
+    })
+  }
   
-  public addDefaultAnnotation(option: OptionDescriptor) {
+  private addDefaultAnnotation(option: OptionDescriptor) {
     if (this.annotations[option.name] == null) {
       this.annotations[option.name] = {}
     }
@@ -25,43 +72,50 @@ export class ConfigAnnotator {
       value = this.stringifyDefaultValue(option.default)
     }
 
-    this.annotations[option.name].default = value
-  }
-
-  public addCommentsToConfig(config: string): string {
-    const annotations = Object.entries(this.annotations)
-    annotations.forEach((annotation) => {
-      const [optionToAnnotate] = annotation
-      const regex = new RegExp(`$[\\s]*"${optionToAnnotate}":`, 'm')
-      const match = config.match(regex)
-
-      if (match == null) {
-        return
-      }
-
-      const commentIndent = match[0].substr(0, match[0].indexOf(`"${optionToAnnotate}"`))
-      config = config.replace(match[0], commentIndent + '// ' + annotation[1].default + match[0])
-    })
-
-    return config
+    this.annotations[option.name].default = 'By default ' + value
   }
 
   private stringifyDefaultValue(value: DefaultDescriptor): string {
     if (isDefinedCondition(value)) {
       const endPart = value.conditions.notDefined === undefined
         ? ''
-        : ` else ${value.conditions.notDefined}`
+        : ` else ${this.valueToString(value.conditions.notDefined)}`
 
-      return `if \`${value.option}\` is defined then ` +
-        `${value.conditions.defined}${endPart}`
+      return `if \`${this.valueToString(value.option)}\` is defined then ` +
+        `${this.valueToString(value.conditions.defined)}${endPart}`
     } else if (isMultipleCondition(value)) {
       let line = `if \`${value.option}\` is equal `
       line += value.conditions.values.map((pair) => {
-        return `\`${pair[0]}\` then \`${pair[1]}\``
+        return `\`${this.valueToString(pair[0])}\` then \`${this.valueToString(pair[1])}\``
       }).join(', ')
-      line += ` else \`${value.conditions.otherwise ?? 'none'}\``
+      line += ` else \`${this.valueToString(value.conditions.otherwise) ?? 'none'}\``
 
       return line
+    } else {
+      return this.valueToString(value)
+    }
+  }
+
+  // todo here is similar logic as in config-completor.ts - unify
+  private isOptionDefined(config: TsConfig, option: OptionDescriptor): boolean {
+    if (option.inRoot) {
+      return config[option.name as keyof TsConfig] !== undefined
+    } else {
+      return config.compilerOptions[option.name as keyof TsConfig] !== undefined
+    }
+  }
+
+  private valueToString(value: unknown): string {
+    if (Array.isArray(value)) {
+      const prepared = value.map((item) => {
+        // now only array of string exists, if other cases appear, improve the logic
+        if (typeof item === 'string') {
+          return `"${item}"`
+        } else {
+          return item
+        }
+      })
+      return `[${prepared.join(', ')}]`
     } else {
       return String(value)
     }

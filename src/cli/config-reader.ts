@@ -7,6 +7,14 @@ export class ConfigReader {
     return this.readConfig(fullPath)
   }
 
+  public static toString(config: TsConfig): string {
+    return JSON.stringify(config, undefined, 2)
+  }
+
+  public write(config: TsConfig, path: string): void {
+    fs.writeFileSync(path, ConfigReader.toString(config))
+  }
+
   private assertConfigPathIsValid(path: string): void {
     if (path == null) {
       throw new Error('Config path not passed.')

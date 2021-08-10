@@ -1,9 +1,11 @@
 import {ConfigAnnotator} from './config-annotator'
-import {ConfigHelper} from './config-helper'
+import {ConfigCompletor} from './config-completor'
 import {ConfigReader} from './config-reader'
 
 const reader = new ConfigReader()
-const helper = new ConfigHelper(new ConfigAnnotator(), reader.read(process.argv[2]))
+const helper = new ConfigCompletor(reader.read(process.argv[2]))
+const annotator = new ConfigAnnotator(helper.getOriginalConfig(), helper.getResultConfig())
 
-// console.log(helper.getAsObject())
-console.log(helper.getAsString(true))
+// console.log(helper.getOriginalConfig(), helper.getResultConfig())
+console.log(annotator.getAnnotatedConfig())
+reader.write(helper.getResultConfig(), 'test.json')

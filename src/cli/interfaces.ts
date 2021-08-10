@@ -7,6 +7,7 @@ export interface TsConfig {
   extends?: string
   // todo specify
   references?: any[]
+  // todo mark ?
   compilerOptions: CompilerOptions
 }
 
