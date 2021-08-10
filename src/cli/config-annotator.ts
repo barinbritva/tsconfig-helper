@@ -15,7 +15,7 @@ export class ConfigAnnotator {
     this.generateAnnotations()
   }
 
-  public getAnnotatedConfig(): string {
+  public generateAnnotatedConfig(): string {
     let config = ConfigReader.toString(this.resultConfig)
     const annotations = Object.entries(this.annotations)
 
@@ -84,9 +84,22 @@ export class ConfigAnnotator {
       return `if \`${this.valueToString(value.option)}\` is defined then ` +
         `${this.valueToString(value.conditions.defined)}${endPart}`
     } else if (isMultipleCondition(value)) {
+      const simplifiedConditions: {value: unknown, cases: unknown[]}[] = []
+      value.conditions.values.forEach((value) => {
+        const foundValue = simplifiedConditions.find((simplifiedValue) => {
+          return simplifiedValue.value === value[1]
+        })
+
+        if (foundValue) {
+          foundValue.cases.push(value[0])
+        } else {
+          simplifiedConditions.push({value: value[1], cases: [value[0]] })
+        }
+      })
+
       let line = `if \`${value.option}\` is equal `
-      line += value.conditions.values.map((pair) => {
-        return `\`${this.valueToString(pair[0])}\` then \`${this.valueToString(pair[1])}\``
+      line += simplifiedConditions.map((condition) => {
+        return `${this.arrayToString(condition.cases)} then \`${this.valueToString(condition.value)}\``
       }).join(', ')
       line += ` else \`${this.valueToString(value.conditions.otherwise) ?? 'none'}\``
 
@@ -118,6 +131,19 @@ export class ConfigAnnotator {
       return `[${prepared.join(', ')}]`
     } else {
       return String(value)
+    }
+  }
+
+  private arrayToString(value: unknown[]): string {
+    const stringifiedValue = '`' + value.join('`, `') + '`'
+
+    if (value.length > 1) {
+      const lastIndex = stringifiedValue.lastIndexOf(',')
+      return  stringifiedValue.substring(0, lastIndex) +
+        ' or' +
+        stringifiedValue.substring(lastIndex + 1)
+    } else {
+      return stringifiedValue
     }
   }
 }
