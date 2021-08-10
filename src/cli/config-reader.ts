@@ -19,7 +19,6 @@ export class ConfigReader {
 
   private readConfig(path: string): TsConfig {
     const content = fs.readFileSync(path, {encoding: 'utf8'})
-    console.log(content)
     // todo remove comments
     // todo process `extends` option
     return JSON.parse(content)

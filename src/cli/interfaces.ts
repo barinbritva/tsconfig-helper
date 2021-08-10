@@ -9,3 +9,7 @@ export interface TsConfig {
   references?: any[]
   compilerOptions: CompilerOptions
 }
+
+export interface OptionAnnotation {
+  default?: string
+}
