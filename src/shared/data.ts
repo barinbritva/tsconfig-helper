@@ -24,7 +24,7 @@ export function getData(): OptionMap {
       name: 'exclude',
       default: [
         // todo check
-        ["node_modules", "bower_components", "jspm_packages"],
+        {value: ["node_modules", "bower_components", "jspm_packages"]},
         {
           option: 'outDir',
           conditions: {
@@ -42,7 +42,7 @@ export function getData(): OptionMap {
   
     'target': {
       name: 'target',
-      default: 'ES3'
+      default: {value: 'ES3'}
     },
     
     'module': {
@@ -98,7 +98,7 @@ export function getData(): OptionMap {
 
     'checkJs': {
       name: 'checkJs',
-      default: false
+      default: {value: false}
     },
 
     // Deprecated flags

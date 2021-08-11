@@ -6,6 +6,10 @@ export interface Hint {
   text?: string
 }
 
+export interface DefaultValue {
+  value: unknown
+}
+
 export interface DefaultDefinedCondition {
   option: ConfigOption,
   conditions: {
@@ -22,6 +26,6 @@ export interface DefaultMultipleCondition {
   }
 }
 
-export type DefaultDescriptor = DefaultDefinedCondition | DefaultMultipleCondition | unknown
+export type DefaultDescriptor = DefaultDefinedCondition | DefaultMultipleCondition | DefaultValue
 
 export type OptionMap = Partial<Record<ConfigOption, OptionDescriptor>>

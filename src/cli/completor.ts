@@ -1,7 +1,6 @@
 import {getData} from '../shared/data'
-import { OptionDescriptor } from '../shared/interfaces'
-import {OptionMap} from '../shared/types'
-import { isDefinedCondition, isMultipleCondition } from '../shared/utils'
+import {DefaultDescriptor, OptionMap} from '../shared/types'
+import {isDefinedCondition, isMultipleCondition} from '../shared/utils'
 import {TsConfig} from './interfaces'
 
 export class Completor {
@@ -36,7 +35,7 @@ export class Completor {
         return
       }
       
-      const defaultDescriptors: OptionDescriptor[] = Array.isArray(descriptor.default)
+      const defaultDescriptors: DefaultDescriptor[] = Array.isArray(descriptor.default)
         ? descriptor.default
         : [descriptor.default]
 
@@ -61,7 +60,7 @@ export class Completor {
             return suitablePair[1]
           }
         } else {
-          return defaultValue
+          return defaultValue.value
         }
       })
 

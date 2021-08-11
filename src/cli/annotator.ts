@@ -75,17 +75,17 @@ export class Annotator {
     this.annotations[option.name].default = 'By default ' + value
   }
 
-  private stringifyDefaultValue(value: DefaultDescriptor): string {
-    if (isDefinedCondition(value)) {
-      const endPart = value.conditions.notDefined === undefined
+  private stringifyDefaultValue(descriptor: DefaultDescriptor): string {
+    if (isDefinedCondition(descriptor)) {
+      const endPart = descriptor.conditions.notDefined === undefined
         ? ''
-        : ` else ${this.valueToString(value.conditions.notDefined)}`
+        : ` else ${this.valueToString(descriptor.conditions.notDefined)}`
 
-      return `if \`${this.valueToString(value.option)}\` is defined then ` +
-        `${this.valueToString(value.conditions.defined)}${endPart}`
-    } else if (isMultipleCondition(value)) {
+      return `if \`${this.valueToString(descriptor.option)}\` is defined then ` +
+        `${this.valueToString(descriptor.conditions.defined)}${endPart}`
+    } else if (isMultipleCondition(descriptor)) {
       const simplifiedConditions: {value: unknown, cases: unknown[]}[] = []
-      value.conditions.values.forEach((value) => {
+      descriptor.conditions.values.forEach((value) => {
         const foundValue = simplifiedConditions.find((simplifiedValue) => {
           return simplifiedValue.value === value[1]
         })
@@ -97,15 +97,15 @@ export class Annotator {
         }
       })
 
-      let line = `if \`${value.option}\` is equal `
+      let line = `if \`${descriptor.option}\` is equal `
       line += simplifiedConditions.map((condition) => {
         return `${this.arrayToString(condition.cases)} then \`${this.valueToString(condition.value)}\``
       }).join(', ')
-      line += ` else \`${this.valueToString(value.conditions.otherwise) ?? 'none'}\``
+      line += ` else \`${this.valueToString(descriptor.conditions.otherwise) ?? 'none'}\``
 
       return line
     } else {
-      return this.valueToString(value)
+      return this.valueToString(descriptor.value)
     }
   }
 
