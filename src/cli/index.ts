@@ -1,11 +1,15 @@
-import {ConfigAnnotator} from './config-annotator'
-import {ConfigCompletor} from './config-completor'
-import {ConfigReader} from './config-reader'
+import {Annotator} from './annotator'
+import {Completor} from './completor'
+import {InputOutput} from './input-output'
 
-const reader = new ConfigReader()
-const helper = new ConfigCompletor(reader.read(process.argv[2]))
-const annotator = new ConfigAnnotator(helper.getOriginalConfig(), helper.getResultConfig())
+const configPath = process.argv[2]
+const needToExplain = process.argv[3]
 
-// console.log(helper.getOriginalConfig(), helper.getResultConfig())
-console.log(annotator.generateAnnotatedConfig())
-reader.write(helper.getResultConfig(), 'test.json')
+const helper = new Completor(InputOutput.read(configPath))
+
+if (needToExplain === 'e') {
+  const annotator = new Annotator(helper.getOriginalConfig(), helper.getResultConfig())
+  console.log(annotator.generateAnnotatedConfig())
+} else {
+  console.log(InputOutput.toString(helper.getResultConfig()))
+}

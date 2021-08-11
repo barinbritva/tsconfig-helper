@@ -4,9 +4,9 @@ import {isDefinedCondition, isMultipleCondition} from '../shared/utils'
 import {getData} from '../shared/data'
 import {OptionAnnotation, TsConfig} from './interfaces'
 import {ConfigOption} from '../shared/tsconfig'
-import {ConfigReader} from './config-reader'
+import {InputOutput} from './input-output'
 
-export class ConfigAnnotator {
+export class Annotator {
   private configDescriptor: OptionMap
   private annotations: Record<string, OptionAnnotation> = {}
 
@@ -16,7 +16,7 @@ export class ConfigAnnotator {
   }
 
   public generateAnnotatedConfig(): string {
-    let config = ConfigReader.toString(this.resultConfig)
+    let config = InputOutput.toString(this.resultConfig)
     const annotations = Object.entries(this.annotations)
 
     annotations.forEach((annotation) => {

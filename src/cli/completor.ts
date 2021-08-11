@@ -4,7 +4,7 @@ import {OptionMap} from '../shared/types'
 import { isDefinedCondition, isMultipleCondition } from '../shared/utils'
 import {TsConfig} from './interfaces'
 
-export class ConfigCompletor {
+export class Completor {
   private resultConfig: TsConfig
   private configDescriptor: OptionMap
 
@@ -39,15 +39,12 @@ export class ConfigCompletor {
       const defaultDescriptors: OptionDescriptor[] = Array.isArray(descriptor.default)
         ? descriptor.default
         : [descriptor.default]
-      // this.annotation[descriptor.name] = {}
 
       const defaultValues = defaultDescriptors.map((defaultValue) => {
         if (isDefinedCondition(defaultValue)) {
           if (this.isOptionDefined(defaultValue.option)) {
-            // this.annotation[descriptor.name].default = `By default if \`${defaultValue.option}\` is defined.`
             return defaultValue.conditions.defined
           } else if (defaultValue.conditions.notDefined !== undefined) {
-            // this.annotation[descriptor.name].default = `By default if \`${defaultValue.option}\` is not defined.`
             return defaultValue.conditions.notDefined
           }
         } else if (isMultipleCondition(defaultValue)) {
@@ -58,15 +55,12 @@ export class ConfigCompletor {
 
           if (suitablePair === undefined) {
             if (defaultValue.conditions.otherwise !== undefined) {
-              // this.annotation[descriptor.name].default = `By default if \`${defaultValue.option}\` is none of ${defaultValue.conditions.values.join(', ')} values.`
               return defaultValue.conditions.otherwise
             }
           } else {
-            // this.annotation[descriptor.name].default = `By default depends on \`${defaultValue.option}\` value`
             return suitablePair[1]
           }
         } else {
-          // this.annotation[descriptor.name].default = 'Default value'
           return defaultValue
         }
       })

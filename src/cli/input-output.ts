@@ -1,10 +1,10 @@
 import fs from 'fs'
 import {TsConfig} from './interfaces'
 
-export class ConfigReader {
-  public read(fullPath: string): TsConfig {
-    this.assertConfigPathIsValid(fullPath)
-    return this.readConfig(fullPath)
+export abstract class InputOutput {
+  public static read(fullPath: string): TsConfig {
+    InputOutput.assertConfigPathIsValid(fullPath)
+    return InputOutput.readConfig(fullPath)
   }
 
   public static toString(config: TsConfig): string {
@@ -12,10 +12,10 @@ export class ConfigReader {
   }
 
   public write(config: TsConfig, path: string): void {
-    fs.writeFileSync(path, ConfigReader.toString(config))
+    fs.writeFileSync(path, InputOutput.toString(config))
   }
 
-  private assertConfigPathIsValid(path: string): void {
+  private static assertConfigPathIsValid(path: string): void {
     if (path == null) {
       throw new Error('Config path not passed.')
     }
@@ -25,7 +25,7 @@ export class ConfigReader {
     }
   }
 
-  private readConfig(path: string): TsConfig {
+  private static readConfig(path: string): TsConfig {
     const content = fs.readFileSync(path, {encoding: 'utf8'})
     // todo remove comments
     // todo process `extends` option

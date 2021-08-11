@@ -239,6 +239,28 @@ export function getData(): OptionMap {
           to: 'target'
         }
       ]
+    },
+
+    'allowJs': {
+      name: 'allowJs',
+      brief: '',
+      type: '',
+      default: {
+        option: 'checkJs',
+        conditions: {
+          values: [
+            [true, true]
+          ],
+          otherwise: false
+        },
+      }
+    },
+
+    'checkJs': {
+      name: 'checkJs',
+      brief: '',
+      type: '',
+      default: false
     }
   }
 }
