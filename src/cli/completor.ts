@@ -49,7 +49,12 @@ export class Completor {
         } else if (isMultipleCondition(defaultValue)) {
           const relatedOptionValue = this.getDefinedValue(defaultValue.option, descriptor.inRoot) 
           const suitablePair = defaultValue.conditions.values.find((value) => {
-            return value[0] === relatedOptionValue
+            // to remove difference between such values as es5/ES5
+            if (typeof value[0] === 'string' && typeof relatedOptionValue === 'string') {
+              return value[0].toLowerCase() === relatedOptionValue.toLowerCase()
+            } else {
+              return value[0] === relatedOptionValue
+            }
           })
 
           if (suitablePair === undefined) {
@@ -115,5 +120,3 @@ export class Completor {
     return mergedValues
   }
 }
-
-
