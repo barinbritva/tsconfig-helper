@@ -1,5 +1,5 @@
 import {RelationType} from './enums'
-import {DefaultDescriptor, Hint} from './types'
+import {DefaultDescriptor} from './types'
 import {ConfigOption} from './tsconfig'
 
 export interface Relation {
@@ -16,14 +16,7 @@ export interface BackRelation {
 
 export interface OptionDescriptor {
   name: ConfigOption
-  type: string
-  brief: string
   inRoot?: boolean
-  allowedValues?: string[]
   default?: DefaultDescriptor | DefaultDescriptor[]
-  hints?: Hint[]
-  relations?: (Relation|BackRelation)[]
-  codeExample?: string
-  isDeprecated?: boolean
-  // description?: string
+  deprecated?: true | ConfigOption
 }

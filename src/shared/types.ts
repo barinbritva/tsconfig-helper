@@ -6,7 +6,7 @@ export interface Hint {
   text?: string
 }
 
-export type DefaultDefinedCondition = {
+export interface DefaultDefinedCondition {
   option: ConfigOption,
   conditions: {
     defined: unknown
@@ -14,7 +14,7 @@ export type DefaultDefinedCondition = {
   }
 }
 
-export type DefaultMultipleCondition = {
+export interface DefaultMultipleCondition {
   option: ConfigOption,
   conditions: {
     values: [unknown, unknown][]
