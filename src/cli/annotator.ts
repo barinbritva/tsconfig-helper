@@ -17,19 +17,36 @@ export class Annotator {
 
   public generateAnnotatedConfig(): string {
     let config = InputOutput.toString(this.resultConfig)
-    const annotations = Object.entries(this.annotations)
+    const annotationPairs = Object.entries(this.annotations)
 
-    annotations.forEach((annotation) => {
-      const [optionToAnnotate] = annotation
+    annotationPairs.forEach((annotationPair) => {
+      const [optionToAnnotate, annotationsToAdd] = annotationPair
       const searchOptionLine = new RegExp(`$[\\s]*"${optionToAnnotate}":`, 'm')
-      const match = config.match(searchOptionLine)
+      const optionMatch = config.match(searchOptionLine)
 
-      if (match == null) {
+      if (optionMatch == null) {
         return
       }
 
-      const commentIndent = match[0].substr(0, match[0].indexOf(`"${optionToAnnotate}"`))
-      config = config.replace(match[0], commentIndent + '// ' + annotation[1].default + match[0])
+      const matchedLine = optionMatch[0]
+      const commentIndent = matchedLine.substr(0, matchedLine.indexOf(`"${optionToAnnotate}"`))
+
+      const annotations: string[] = []
+      if (annotationsToAdd.default !== undefined) {
+        annotations.push(annotationsToAdd.default)
+      }
+      if (annotationsToAdd.deprecation !== undefined) {
+        annotations.push(annotationsToAdd.deprecation)
+      }
+
+      const annotationComments = annotations.reduce(
+        (accumulator, comment) => {
+          return accumulator + commentIndent + '// ' + comment
+        },
+        ''
+      )
+
+      config = config.replace(matchedLine, annotationComments + matchedLine)
     })
 
     return config
@@ -44,18 +61,20 @@ export class Annotator {
     resultConfigKeys.forEach((key) => {
       const option = this.configDescriptor[key as ConfigOption]
 
-      if (
-        option != null &&
-        !this.isOptionDefined(this.originalConfig, option)
-      ) {
+      if (option != null) {
+        if (this.annotations[option.name] == null) {
+          this.annotations[option.name] = {}
+        }
+
         this.addDefaultAnnotation(option)
+        this.addDeprecationAnnotation(option)
       }
     })
   }
   
-  private addDefaultAnnotation(option: OptionDescriptor) {
-    if (this.annotations[option.name] == null) {
-      this.annotations[option.name] = {}
+  private addDefaultAnnotation(option: OptionDescriptor): void {
+    if (this.isOptionDefined(this.originalConfig, option)) {
+      return
     }
 
     let value = ''
@@ -73,6 +92,15 @@ export class Annotator {
     }
 
     this.annotations[option.name].default = 'By default ' + value
+  }
+
+  private addDeprecationAnnotation(option: OptionDescriptor): void {
+    if (option.deprecated) {
+      const description = typeof option.deprecated === 'string'
+        ? `, use \`${option.deprecated}\` instead`
+        : ''
+      this.annotations[option.name].deprecation = 'Deprecated' + description
+    }
   }
 
   private stringifyDefaultValue(descriptor: DefaultDescriptor): string {

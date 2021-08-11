@@ -13,4 +13,5 @@ export interface TsConfig {
 
 export interface OptionAnnotation {
   default?: string
+  deprecation?: string
 }
