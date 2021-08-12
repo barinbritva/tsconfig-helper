@@ -1,5 +1,5 @@
 import {BackRelation, Relation} from './interfaces'
-import {DefaultDefinedCondition, DefaultDescriptor, DefaultMultipleCondition} from './types'
+import {DefaultDefinedCondition, DefaultDescriptor, DefaultMultipleCondition, DefaultValue} from './types'
 
 export function isMultipleCondition(value: DefaultDescriptor): value is DefaultMultipleCondition {
   if (
@@ -17,6 +17,14 @@ export function isDefinedCondition(value: DefaultDescriptor): value is DefaultDe
     'conditions' in (value as DefaultDefinedCondition) &&
     'defined' in (value as DefaultDefinedCondition).conditions
   ) {
+    return true
+  }
+
+  return false
+}
+
+export function isNonCondition(value: DefaultDescriptor): value is DefaultValue {
+  if ('value' in (value as DefaultValue)) {
     return true
   }
 

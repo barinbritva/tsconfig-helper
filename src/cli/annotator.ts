@@ -1,6 +1,6 @@
 import {DefaultDescriptor, OptionMap} from '../shared/types'
 import {OptionDescriptor} from '../shared/interfaces'
-import {isDefinedCondition, isMultipleCondition} from '../shared/utils'
+import {isDefinedCondition, isMultipleCondition, isNonCondition} from '../shared/utils'
 import {getData} from '../shared/data'
 import {OptionAnnotation, TsConfig} from './interfaces'
 import {ConfigOption} from '../shared/tsconfig'
@@ -10,7 +10,11 @@ export class Annotator {
   private configDescriptor: OptionMap
   private annotations: Record<string, OptionAnnotation> = {}
 
-  constructor(private originalConfig: TsConfig, private resultConfig: TsConfig) {
+  constructor(
+    private originalConfig: TsConfig,
+    private resultConfig: TsConfig,
+    private shortDefaultComments = false
+  ) {
     this.configDescriptor = getData()
     this.generateAnnotations()
   }
@@ -78,7 +82,6 @@ export class Annotator {
     }
 
     let value = ''
-
     if (option.default == undefined) {
       value = 'no value'
     } else if (Array.isArray(option.default)) {
@@ -104,36 +107,44 @@ export class Annotator {
   }
 
   private stringifyDefaultValue(descriptor: DefaultDescriptor): string {
-    if (isDefinedCondition(descriptor)) {
-      const endPart = descriptor.conditions.notDefined === undefined
-        ? ''
-        : ` else ${this.valueToString(descriptor.conditions.notDefined)}`
-
-      return `if \`${this.valueToString(descriptor.option)}\` is defined then ` +
-        `${this.valueToString(descriptor.conditions.defined)}${endPart}`
-    } else if (isMultipleCondition(descriptor)) {
-      const simplifiedConditions: {value: unknown, cases: unknown[]}[] = []
-      descriptor.conditions.values.forEach((value) => {
-        const foundValue = simplifiedConditions.find((simplifiedValue) => {
-          return simplifiedValue.value === value[1]
-        })
-
-        if (foundValue) {
-          foundValue.cases.push(value[0])
-        } else {
-          simplifiedConditions.push({value: value[1], cases: [value[0]] })
-        }
-      })
-
-      let line = `if \`${descriptor.option}\` is equal `
-      line += simplifiedConditions.map((condition) => {
-        return `${this.arrayToString(condition.cases)} then \`${this.valueToString(condition.value)}\``
-      }).join(', ')
-      line += ` else \`${this.valueToString(descriptor.conditions.otherwise) ?? 'none'}\``
-
-      return line
+    if (this.shortDefaultComments) {
+      if (isNonCondition(descriptor)) {
+        return this.valueToString(descriptor.value)
+      } else {
+        return `depends on \`${descriptor.option}\``
+      }
     } else {
-      return this.valueToString(descriptor.value)
+      if (isDefinedCondition(descriptor)) {
+        const endPart = descriptor.conditions.notDefined === undefined
+          ? ''
+          : ` else ${this.valueToString(descriptor.conditions.notDefined)}`
+  
+        return `if \`${this.valueToString(descriptor.option)}\` is defined then ` +
+          `${this.valueToString(descriptor.conditions.defined)}${endPart}`
+      } else if (isMultipleCondition(descriptor)) {
+        const simplifiedConditions: {value: unknown, cases: unknown[]}[] = []
+        descriptor.conditions.values.forEach((value) => {
+          const foundValue = simplifiedConditions.find((simplifiedValue) => {
+            return simplifiedValue.value === value[1]
+          })
+  
+          if (foundValue) {
+            foundValue.cases.push(value[0])
+          } else {
+            simplifiedConditions.push({value: value[1], cases: [value[0]] })
+          }
+        })
+  
+        let line = `if \`${descriptor.option}\` is equal `
+        line += simplifiedConditions.map((condition) => {
+          return `${this.arrayToString(condition.cases)} then \`${this.valueToString(condition.value)}\``
+        }).join(', ')
+        line += ` else \`${this.valueToString(descriptor.conditions.otherwise) ?? 'none'}\``
+  
+        return line
+      } else {
+        return this.valueToString(descriptor.value)
+      }
     }
   }
 

@@ -41,12 +41,17 @@ if (showCoverage) {
   const configPath = argv._[0] == null ? 'tsconfig.json' : String(argv._[0])
   const needToExplain = argv['e']
   const outputFilePath = argv['o'] == null ? undefined : String(argv['o'])
+  const showShortExplanations = argv['s'] == null ? false : Boolean(argv['s'])
 
   const completor = new Completor(InputOutput.read(configPath))
   let result = ''
 
   if (needToExplain === true) {
-    const annotator = new Annotator(completor.getOriginalConfig(), completor.getResultConfig())
+    const annotator = new Annotator(
+      completor.getOriginalConfig(),
+      completor.getResultConfig(),
+      showShortExplanations
+    )
     result = annotator.generateAnnotatedConfig()
   } else {
     result = InputOutput.toString(completor.getResultConfig())
