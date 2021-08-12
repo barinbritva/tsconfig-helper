@@ -7,7 +7,7 @@ export class Completor {
   private resultConfig: TsConfig
   private configDescriptor: OptionMap
 
-  constructor(private originalConfig: TsConfig) {
+  constructor(private originalConfig: TsConfig, private omitEmptyValues = false) {
     // instead of deep clone
     this.resultConfig = JSON.parse(JSON.stringify(this.originalConfig))
     this.configDescriptor = getData()
@@ -68,6 +68,15 @@ export class Completor {
           return defaultValue.value
         }
       })
+
+      // if omit mode and value is false or an empty array - don't add it
+      if (this.omitEmptyValues && defaultValues.length === 1) {
+        if (
+          defaultValues[0] === false ||
+          (Array.isArray(defaultValues[0]) && defaultValues[0].length === 0)) {
+            return
+        }
+      }
 
       const mergedValue = this.mergeDefaultValuePieces(defaultValues)
       this.defineOption(descriptor.name, mergedValue, descriptor.inRoot)

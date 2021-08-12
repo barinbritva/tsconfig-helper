@@ -19,13 +19,11 @@ const argv = yargs(process.argv.slice(2))
     describe: 'Add explanations to output',
     boolean: true 
   })
-  // todo implement
   .option('short', {
     alias: 's',
     describe: 'Short explanations instead of verbose',
     boolean: true 
   })
-  // todo implement
   .option('ignore', {
     alias: 'i',
     describe: 'Do not include empty default values such as falsy and empty arrays to result config',
@@ -42,8 +40,9 @@ if (showCoverage) {
   const needToExplain = argv['e']
   const outputFilePath = argv['o'] == null ? undefined : String(argv['o'])
   const showShortExplanations = argv['s'] == null ? false : Boolean(argv['s'])
+  const ignoreEmptyValues = argv['i'] == null ? false : Boolean(argv['i'])
 
-  const completor = new Completor(InputOutput.read(configPath))
+  const completor = new Completor(InputOutput.read(configPath), ignoreEmptyValues)
   let result = ''
 
   if (needToExplain === true) {
