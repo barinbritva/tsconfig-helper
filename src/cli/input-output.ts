@@ -11,8 +11,12 @@ export abstract class InputOutput {
     return JSON.stringify(config, undefined, 2)
   }
 
-  public write(config: TsConfig, path: string): void {
-    fs.writeFileSync(path, InputOutput.toString(config))
+  public static write(config: TsConfig | string, path: string): void {
+    if (typeof config === 'object') {
+      config = InputOutput.toString(config)
+    }
+    
+    fs.writeFileSync(path, config)
   }
 
   private static assertConfigPathIsValid(path: string): void {

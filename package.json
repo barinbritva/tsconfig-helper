@@ -26,5 +26,8 @@
     "jest": "^27.0.6",
     "ts-node": "^9.1.1",
     "typescript": "^4.4.0-beta"
+  },
+  "dependencies": {
+    "yargs": "^17.1.0"
   }
 }
