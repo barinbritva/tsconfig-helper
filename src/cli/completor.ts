@@ -106,10 +106,29 @@ export class Completor {
     }
   }
 
+  // todo check for the same option names in root and compilerOptions
+  private lookupDefinedValue(key: string): unknown {
+    return this.getDefinedValue(key, true) ?? this.getDefinedValue(key, false)
+  }
+
+  private processDynamicValuesIfNeeded(value: unknown): unknown {
+    if (typeof value === 'string') {
+      const dynamicValueRegexp = /%(\w*)%/
+      const match = value.match(dynamicValueRegexp)
+
+      if (match != null) {
+        return value.replace(match[0], String(this.lookupDefinedValue(match[1])))
+      }
+
+      return value
+    }
+
+    return value
+  }
+
   private mergeDefaultValuePieces(pieces: unknown[]): unknown {
-    // todo ! check for dynamic value %flag%
     if (pieces.length === 1) {
-      return pieces[0]
+      return this.processDynamicValuesIfNeeded(pieces[0])
     }
 
     const mergedValues: unknown[] = []
@@ -119,7 +138,11 @@ export class Completor {
       }
 
       if (Array.isArray(piece)) {
-        mergedValues.push(...piece)
+        mergedValues.push(
+          ...piece.map((item) => {
+            return this.processDynamicValuesIfNeeded(item)
+          })
+        )
       } else {
         // if other cases appear, improve the logic
         throw new Error('Value merging are available only for arrays. Given: ' + pieces.join(', '))
