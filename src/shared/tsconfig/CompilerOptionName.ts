@@ -3,7 +3,6 @@
 
 export type CompilerOptionName =
   | "help"
-  | "help"
   | "watch"
   | "preserveWatchOutput"
   | "listFiles"
@@ -127,4 +126,4 @@ export type CompilerOptionName =
   | "enable"
   | "include"
   | "exclude"
-  | "disableFilenameBasedTypeAcquisition";
+  | "disableFilenameBasedTypeAcquisition"
