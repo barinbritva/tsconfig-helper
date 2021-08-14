@@ -83,22 +83,117 @@ export function getData(): OptionMap {
       default: [
         {
           option: 'target',
-          // picked from TypeScript/src/compiler/utilitiesPublic.ts,
+          // picked from https://github.com/microsoft/TypeScript/blob/main/src/compiler/utilitiesPublic.ts
           // function getDefaultLibFileName
           conditions: {
             values: [
-              ['ES6', ['lib.es6.d.ts']],
-              ['ES2015', ['lib.es6.d.ts']],
-              ['ES7', ['lib.es2016.full.d.ts']],
-              ['ES2016', ['lib.es2016.full.d.ts']],
-              ['ES2017', ['lib.es2017.full.d.ts']],
-              ['ES2018', ['lib.es2018.full.d.ts']],
-              ['ES2019', ['lib.es2019.full.d.ts']],
-              ['ES2020', ['lib.es2020.full.d.ts']],
-              ['ES2021', ['lib.es2021.full.d.ts']],
-              ['ESNext', ['lib.esnext.full.d.ts']]
+              [
+                'ES6',
+                [
+                  "ES2015",
+                  "DOM",
+                  "DOM.Iterable",
+                  "WebWorker.ImportScripts",
+                  "ScriptHost"
+                ]
+              ],
+              [
+                'ES2015',
+                [
+                  "ES2015",
+                  "DOM",
+                  "DOM.Iterable",
+                  "WebWorker.ImportScripts",
+                  "ScriptHost"
+                ]
+              ],
+              [
+                'ES7',
+                [
+                  "ES2016",
+                  "DOM",
+                  "DOM.Iterable",
+                  "WebWorker.ImportScripts",
+                  "ScriptHost"
+                ]
+              ],
+              [
+                'ES2016',
+                [
+                  "ES2016",
+                  "DOM",
+                  "DOM.Iterable",
+                  "WebWorker.ImportScripts",
+                  "ScriptHost"
+                ]
+              ],
+              [
+                'ES2017',
+                [
+                  "ES2017",
+                  "DOM",
+                  "DOM.Iterable",
+                  "WebWorker.ImportScripts",
+                  "ScriptHost"
+                ]
+              ],
+              [
+                'ES2018',
+                [
+                  "ES2018",
+                  "DOM",
+                  "DOM.Iterable",
+                  "WebWorker.ImportScripts",
+                  "ScriptHost"
+                ]
+              ],
+              [
+                'ES2019',
+                [
+                  "ES2019",
+                  "DOM",
+                  "DOM.Iterable",
+                  "WebWorker.ImportScripts",
+                  "ScriptHost"
+                ]
+              ],
+              [
+                'ES2020',
+                [
+                  "ES2020",
+                  "DOM",
+                  "DOM.Iterable",
+                  "WebWorker.ImportScripts",
+                  "ScriptHost"
+                ]
+              ],
+              [
+                'ES2021',
+                [
+                  "ES2021",
+                  "DOM",
+                  "DOM.Iterable",
+                  "WebWorker.ImportScripts",
+                  "ScriptHost"
+                ]
+              ],
+              [
+                'ESNext',
+                [
+                  "ESNext",
+                  "DOM",
+                  "DOM.Iterable",
+                  "WebWorker.ImportScripts",
+                  "ScriptHost"
+                ]
+              ]
             ],
-            otherwise: ['lib.d.ts']
+            otherwise: [
+              "ES5",
+              "DOM",
+              "WebWorker.ImportScripts",
+              "ScriptHost"
+            ]
           }
         },
         // todo implement prioritization
