@@ -41,7 +41,7 @@ export class Completor {
 
       const defaultValues = defaultDescriptors.map((defaultValue) => {
         if (isDefinedCondition(defaultValue)) {
-          if (this.isOptionDefined(defaultValue.option)) {
+          if (this.lookupDefinedValue(defaultValue.option) !== undefined) {
             return defaultValue.conditions.defined
           } else if (defaultValue.conditions.notDefined !== undefined) {
             return defaultValue.conditions.notDefined

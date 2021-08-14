@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import yargs from 'yargs'
 import {Annotator} from './annotator'
 import {Completor} from './completor'
