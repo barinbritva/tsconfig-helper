@@ -1,5 +1,5 @@
 import {RelationType} from './enums'
-import {DefaultDescriptor} from './types'
+import {ConfigSection, DefaultDescriptor} from './types'
 import {ConfigOption} from './tsconfig'
 
 export interface Relation {
@@ -19,4 +19,6 @@ export interface OptionDescriptor {
   inRoot?: boolean
   default?: DefaultDescriptor | DefaultDescriptor[]
   deprecated?: true | ConfigOption
+  cliOnly?: boolean
+  section?: ConfigSection
 }
