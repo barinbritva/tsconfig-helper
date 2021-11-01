@@ -17,8 +17,10 @@
     "build": "ts-node ./tasks/run-build.ts",
     "build:dev": "ts-node ./tasks/run-build.ts -d",
     "start": "node ./dist/cli/index.js",
-    "build-tests:dev": "tsc --project ./tsconfig-test.json",
-    "test": "jest ./dist-test --watch"
+    "build-tests:dev": "tsc --project ./tsconfig-test.json --watch",
+    "test:dev": "jest --roots ./dist-test/test --watch",
+    "build-tests": "tsc --project ./tsconfig-test.json",
+    "test": "jest --roots ./dist-test/test"
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",

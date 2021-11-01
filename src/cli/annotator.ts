@@ -56,6 +56,15 @@ export class Annotator {
     return config
   }
 
+  public getAnnotationFor(option: ConfigOption): OptionAnnotation {
+    const annotation = this.annotations[option]
+    if (annotation) {
+      return annotation
+    } else {
+      return {}
+    }
+  }
+
   private generateAnnotations(): void {
     let resultConfigKeys = Object.keys(this.resultConfig)
     if (this.resultConfig.compilerOptions != null) {

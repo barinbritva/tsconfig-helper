@@ -28,6 +28,19 @@ export class Completor {
     })
 
     descriptors.forEach((descriptor) => {
+      // todo remove block after refactoring of sections
+      if (descriptor.section != null) {
+        return
+      }
+
+      if (descriptor.cliOnly) {
+        return
+      }
+
+      if (descriptor.deprecated) {
+        return
+      }
+
       if (
         descriptor.default === undefined ||
         this.isOptionDefined(descriptor.name, descriptor.inRoot)
