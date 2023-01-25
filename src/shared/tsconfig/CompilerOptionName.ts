@@ -1,5 +1,6 @@
+// copied from https://github.com/microsoft/TypeScript-Website/blob/v2/packages/tsconfig-reference/data/_types.ts
+
 // __auto-generated__
-// copied from https://github.com/barinbritva/TypeScript-Website/blob/v2/packages/tsconfig-reference/data/_types.ts
 
 export type CompilerOptionName =
   | "help"
@@ -110,6 +111,7 @@ export type CompilerOptionName =
   | "maxNodeModuleJsDepth"
   | "noStrictGenericChecks"
   | "useDefineForClassFields"
+  | "preserveValueImports"
   | "keyofStringsOnly"
   | "plugins"
   | "watchFile"

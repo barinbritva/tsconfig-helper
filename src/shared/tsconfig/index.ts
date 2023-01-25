@@ -1,7 +1,8 @@
 import {CompilerOptionName} from './CompilerOptionName'
 
 type RootOptionName = 'files' | 'include' | 'exclude' | 'extends' | 'references'
-type ConfigOption = CompilerOptionName | RootOptionName
+type TypeAcquisition = 'enable' | 'include' | 'exclude' | 'disableFilenameBasedTypeAcquisition'
+type ConfigOption = CompilerOptionName | RootOptionName | TypeAcquisition
 
 export {
   CompilerOptionName,
