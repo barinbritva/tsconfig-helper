@@ -1,6 +1,6 @@
 {
   "name": "tsch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "files": [
     "/dist"
   ],
@@ -20,7 +20,8 @@
     "build-tests:dev": "tsc --project ./tsconfig-test.json --watch",
     "test:dev": "jest --roots ./dist-test/test --watch",
     "build-tests": "tsc --project ./tsconfig-test.json",
-    "test": "jest --roots ./dist-test/test"
+    "test": "jest --roots ./dist-test/test",
+    "release": "ts-node ./tasks/run-release.ts"
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
